@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="jp">
+	<head>
+		<title>Apple Crusher</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<style>
+			body {
+				font-family: Monospace;
+				background-color: #eee;
+				margin: 0px;
+				overflow: hidden;
+			}
+		</style>
+	</head>
+	<body>
+		<script src="http://js.leapmotion.com/0.2.0/leap.min.js"></script>
+		<script>
+			var radius;
+			var preRadius = 0.0;
+			var count = 0;
+			var score = document.getElementById("score");
+
+			Leap.loop({enableGestures: true}, function(frame){
+				radius = frame.hands[0].sphereRadius;
+				if ((preRadius > 60) && (60 >= radius)) {
+					count++;
+			 		console.log("count:"+ count + " preRadius:" + preRadius + " radius:" + radius );
+			 		document.getElementById("score").innerHTML = "Score:" + String(count);
+				}
+				preRadius = radius;
+		 		document.getElementById("radius").innerHTML = "Radius:" + String(radius);
+		 	});
+
+
+		 </script>
+		 <p id="score" font="large">Score:0</p>
+		 <p id="radius" font="large">Radius:-</p>
+	</body>
+</html>
+
+
