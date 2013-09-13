@@ -4,6 +4,12 @@
 		<title>Apple Crusher</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	    <meta http-equiv="Content-Language" content="ja" />
+    	<meta http-equiv="Content-Style-Type" content="text/css" />
+    	<meta http-equiv="Content-Script-Type" content="text/javascript" />
+    	<!--[if IE]><script type="text/javascript" src="excanvas.js"></script><![endif]-->
+  
 		<style>
 			body {
 				font-family: Monospace;
@@ -11,31 +17,75 @@
 				margin: 0px;
 				overflow: hidden;
 			}
+			div.summary p{
+				font-size: xx-large;
+			}
 		</style>
 	</head>
 	<body>
 		<script src="http://js.leapmotion.com/0.2.0/leap.min.js"></script>
 		<script>
+			var ready = false;
 			var radius;
 			var preRadius = 0.0;
 			var count = 0;
 			var score = document.getElementById("score");
 
+			var flatRadius = 80.0;
+			var grepRadius = 60.0;
+
 			Leap.loop({enableGestures: true}, function(frame){
 				radius = frame.hands[0].sphereRadius;
-				if ((preRadius > 60) && (60 >= radius)) {
-					count++;
-			 		console.log("count:"+ count + " preRadius:" + preRadius + " radius:" + radius );
-			 		document.getElementById("score").innerHTML = "Score:" + String(count);
+
+				if (radius > flatRadius) { //手を開いた状態
+					resetCrush();
+				}
+
+				if (ready && (preRadius > grepRadius) && (grepRadius >= radius)) {
+					startCrush();
 				}
 				preRadius = radius;
 		 		document.getElementById("radius").innerHTML = "Radius:" + String(radius);
 		 	});
 
+			function startCrush() {
+					count++;
+			 		console.log("count:"+ count + " preRadius:" + preRadius + " radius:" + radius );
+			 		for (var i=0; i<9; i++) {
+			 			console.log(i);
+				 		setTimeout("imageUpdate("+String(i)+")",100);
+			 		}
+			 		document.getElementById("score").innerHTML = "Score:" + String(count);
+			 		ready = false;				
+			}
+
+			function resetCrush() {
+				ready = true;
+				imageUpdate(0);
+			}
+
+			function imageUpdate (i) {
+				document.getElementById("apple").setAttribute("src","./i/0"+String(i)+".png");
+			}
+
+			function tweet() {
+				window.open('https://twitter.com/intent/tweet?text=りんご' +count+ '個つぶしたわー %23AppleCrusher %23ABPro');
+			}
+
 
 		 </script>
+		 <div class="summary">
 		 <p id="score" font="large">Score:0</p>
-		 <p id="radius" font="large">Radius:-</p>
+		</div>
+		<form>
+			<input type="button" id="tweetbutton" name="tweetbutton" value="ツイートする" onclick="tweet()" />
+		</form>
+		<img id="apple" name="apple" src="./i/00.png" />
+		<form>
+			<input type="button" id="tweetbutton" name="tweetbutton" value="クリックでりんごをつぶす" onclick="startCrush();resetCrush()" />
+		</form>
+　      <p id="radius" font="large">Radius:-</p>
+
 	</body>
 </html>
 
