@@ -25,6 +25,22 @@
 	<body>
 		<script src="http://js.leapmotion.com/0.2.0/leap.min.js"></script>
 		<script>
+
+			window.onload = function(){
+				window.document.onkeydown = function(evt){
+					if (evt){
+						var kc = evt.keyCode;
+					}else{
+						var kc = event.keyCode;
+					}
+					// console.log(kc);
+					if (kc == 32) {
+						startCrush();
+						resetCrush();
+					}
+				}
+			}
+
 			var ready = false;
 			var radius;
 			var preRadius = 0.0;
@@ -55,7 +71,8 @@
 			 			console.log(i);
 				 		setTimeout("imageUpdate("+String(i)+")",100);
 			 		}
-			 		document.getElementById("score").innerHTML = "Score:" + String(count);
+			 		// document.getElementById("score").innerHTML = "Score:" + String(count);
+			 		document.getElementById("apple").innerHTML += '<img src="./i/apple.png">';
 			 		ready = false;				
 			}
 
@@ -65,7 +82,7 @@
 			}
 
 			function imageUpdate (i) {
-				document.getElementById("apple").setAttribute("src","./i/0"+String(i)+".png");
+				document.getElementById("appleCrush").setAttribute("src","./i/0"+String(i)+".png");
 			}
 
 			function tweet() {
@@ -74,15 +91,13 @@
 
 
 		 </script>
-		 <div class="summary">
-		 <p id="score" font="large">Score:0</p>
+		 <div id="apple">
+
+<!-- 		 <p id="score" font="large">Score:0</p> -->
 		</div>
+		<img id="appleCrush" name="apple" src="./i/00.png" />
 		<form>
 			<input type="button" id="tweetbutton" name="tweetbutton" value="ツイートする" onclick="tweet()" />
-		</form>
-		<img id="apple" name="apple" src="./i/00.png" />
-		<form>
-			<input type="button" id="tweetbutton" name="tweetbutton" value="クリックでりんごをつぶす" onclick="startCrush();resetCrush()" />
 		</form>
 　      <p id="radius" font="large">Radius:-</p>
 
